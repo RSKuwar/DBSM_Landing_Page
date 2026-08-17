@@ -325,19 +325,23 @@ class DBSMApp {
   ------------------------------------------------------------- */
   renderAboutView() {
     return `
-      <section class="section-wrapper" style="padding-top: 12rem;">
-        <span class="section-label">OUR INSTITUTIONAL STORY</span>
-        <h1 class="section-title">Skills. Innovation. Possibility.</h1>
+      <section class="section-wrapper scroll-reveal" style="padding-top: 12rem;">
+        <span class="section-label scroll-reveal stagger-1">OUR INSTITUTIONAL STORY</span>
+        <h1 class="section-title scroll-reveal stagger-2">Skills. Innovation. Possibility.</h1>
         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; margin-top: 3rem;">
-          <div>
+          <div class="scroll-reveal reveal-left stagger-3">
             <h3 style="font-family: var(--font-serif); font-size: 2.2rem; margin-bottom: 1.5rem;">DBSM Introduction & History</h3>
             <p style="color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 2rem;">
               Don Bosco Skill Mission (DBSM) in Bengaluru was established to empower youth with domain skills. Spanning a state-of-the-art 75,000+ sq. ft. architectural campus, DBSM has trained thousands of young men and women across high-growth technology industries.
             </p>
-            <img src="https://dbsm.dbtech.in/images/Section-bg/Aboutus1.jpg" style="width:100%; height:320px; object-fit:cover; margin-bottom:2.5rem; border:1px solid var(--glass-border);" alt="DBSM Campus Building" />
+            <div class="img-reveal-wrapper">
+              <img src="https://dbsm.dbtech.in/images/Section-bg/Aboutus1.jpg" style="width:100%; height:320px; object-fit:cover; margin-bottom:2.5rem; border:1px solid var(--glass-border);" alt="DBSM Campus Building" />
+            </div>
           </div>
-          <div style="background-color: #FFF; padding: 2.5rem; border: 1px solid var(--glass-border); height: fit-content;">
-            <img src="https://dbsm.dbtech.in/images/Section-bg/obj1.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="Objectives" />
+          <div class="scroll-reveal reveal-right stagger-4" style="background-color: #FFF; padding: 2.5rem; border: 1px solid var(--glass-border); height: fit-content;">
+            <div class="img-reveal-wrapper">
+              <img src="https://dbsm.dbtech.in/images/Section-bg/obj1.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="Objectives" />
+            </div>
             <h4 style="font-size: 0.85rem; letter-spacing: 0.2em; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 1.5rem;">Institutional Objectives</h4>
             <ol style="line-height: 2.4; color: var(--text-main); font-weight: 500; list-style: none;">
               <li>01 / Advanced Practical Research</li>
@@ -357,76 +361,94 @@ class DBSMApp {
   ------------------------------------------------------------- */
   renderCampusTourView() {
     return `
-      <section class="section-wrapper" style="padding-top: 12rem;">
-        <span class="section-label">INTERACTIVE CAMPUS EXPLORATION</span>
-        <h1 class="section-title">Full Campus Facilities & Spaces</h1>
+      <section class="section-wrapper scroll-reveal" style="padding-top: 12rem;">
+        <span class="section-label scroll-reveal stagger-1">INTERACTIVE CAMPUS EXPLORATION</span>
+        <h1 class="section-title scroll-reveal stagger-2">Full Campus Facilities & Spaces</h1>
         <div class="campus-grid">
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/Slider/slider-1.jpg" alt="Entrance & Atrium" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-1">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/Slider/slider-1.jpg" alt="Entrance & Atrium" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">01 / MAIN ENTRANCE</div>
               <h3 class="campus-name">Entrance & Atrium</h3>
               <p class="campus-desc">Sleek glass architecture welcome area and orientation lobby.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/Training-hall.jpg" alt="Training Halls" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-2">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/Training-hall.jpg" alt="Training Halls" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">02 / PRACTICAL TRAINING</div>
               <h3 class="campus-name">Practical Training Halls</h3>
               <p class="campus-desc">High-bay diagnostic halls built for collaborative hands-on learning.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/classroom.jpg" alt="Smart Classrooms" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-3">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/classroom.jpg" alt="Smart Classrooms" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">03 / ACADEMIC SPACES</div>
               <h3 class="campus-name">Smart Classrooms</h3>
               <p class="campus-desc">Ergonomic digital lecture rooms with interactive displays.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/centre-of-excellence/facilities.jpg" alt="AWS & DCOM Labs" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-1">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/centre-of-excellence/facilities.jpg" alt="AWS & DCOM Labs" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">04 / CENTRES OF EXCELLENCE</div>
               <h3 class="campus-name">AWS & DCOM Server Labs</h3>
               <p class="campus-desc">Enterprise server racks, UPS systems, and cloud infrastructure hardware.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/auditorium.jpg" alt="Auditorium" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-2">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/auditorium.jpg" alt="Auditorium" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">05 / AUDITORIUM</div>
               <h3 class="campus-name">Grand Auditorium</h3>
               <p class="campus-desc">300+ seat venue for guest lectures, industry seminars, and keynotes.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/conference-hall.jpg" alt="Conference Hall" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-3">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/conference-hall.jpg" alt="Conference Hall" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">06 / CONFERENCE</div>
               <h3 class="campus-name">Executive Conference Hall</h3>
               <p class="campus-desc">Boardroom facilities for corporate partner meetups and workshops.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/cafeteria.jpg" alt="Cafeteria" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-1">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/cafeteria.jpg" alt="Cafeteria" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">07 / DINING</div>
               <h3 class="campus-name">Cafeteria</h3>
               <p class="campus-desc">Hygienic multi-cuisine dining hall serving students and faculty.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/open-area.jpg" alt="Courtyard" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-2">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/open-area.jpg" alt="Courtyard" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">08 / OUTDOORS</div>
               <h3 class="campus-name">Courtyard</h3>
               <p class="campus-desc">Green open-air spaces, walkways, and recreational zones.</p>
             </div>
           </div>
-          <div class="campus-card">
-            <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/other-amenties.jpg" alt="Residential Housing" />
+          <div class="campus-card scroll-reveal reveal-scale stagger-3">
+            <div class="img-reveal-wrapper">
+              <img class="campus-img" src="https://dbsm.dbtech.in/images/campus-tour/icons/other-amenties.jpg" alt="Residential Housing" />
+            </div>
             <div class="campus-info">
               <div class="campus-num">09 / RESIDENTIAL</div>
               <h3 class="campus-name">Residential Housing</h3>
@@ -440,12 +462,14 @@ class DBSMApp {
 
   renderCoursesView() {
     return `
-      <section class="section-wrapper" style="padding-top: 12rem;">
-        <span class="section-label">SPECIALISED ACADEMIC PROGRAMS</span>
-        <h1 class="section-title">Choose Your Direction.</h1>
+      <section class="section-wrapper scroll-reveal" style="padding-top: 12rem;">
+        <span class="section-label scroll-reveal stagger-1">SPECIALISED ACADEMIC PROGRAMS</span>
+        <h1 class="section-title scroll-reveal stagger-2">Choose Your Direction.</h1>
         <div class="courses-grid">
-          <div class="course-card">
-            <img src="https://dbsm.dbtech.in/images/centre-of-excellence/electrician.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="EV" />
+          <div class="course-card scroll-reveal reveal-left stagger-1">
+            <div class="img-reveal-wrapper">
+              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/electrician.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="EV" />
+            </div>
             <div class="course-code">EV — ELECTRIC VEHICLE</div>
             <h3 class="course-title">Build the Future of Mobility.</h3>
             <p class="course-tagline">Master EV powertrains, battery management systems, motor controllers and automotive electrical diagnostics.</p>
@@ -455,8 +479,10 @@ class DBSMApp {
             </div>
           </div>
 
-          <div class="course-card">
-            <img src="https://dbsm.dbtech.in/images/centre-of-excellence/facilities.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="AWS" />
+          <div class="course-card scroll-reveal reveal-right stagger-2">
+            <div class="img-reveal-wrapper">
+              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/facilities.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="AWS" />
+            </div>
             <div class="course-code">AWS RE/START — CLOUD COMPUTING</div>
             <h3 class="course-title">Build Your Career in the Cloud.</h3>
             <p class="course-tagline">Comprehensive cloud architecture training covering Linux, Python, AWS services, security and DevOps foundation.</p>
@@ -466,8 +492,10 @@ class DBSMApp {
             </div>
           </div>
 
-          <div class="course-card">
-            <img src="https://dbsm.dbtech.in/images/centre-of-excellence/home-refridgration.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="DCOM" />
+          <div class="course-card scroll-reveal reveal-left stagger-3">
+            <div class="img-reveal-wrapper">
+              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/home-refridgration.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="DCOM" />
+            </div>
             <div class="course-code">DCOM — DATA CENTRE OPERATIONS</div>
             <h3 class="course-title">Power the Digital World.</h3>
             <p class="course-tagline">Data centre physical infrastructure, cooling, power redundancy, rack management and enterprise uptime operations.</p>
@@ -477,8 +505,10 @@ class DBSMApp {
             </div>
           </div>
 
-          <div class="course-card">
-            <img src="https://dbsm.dbtech.in/images/centre-of-excellence/Hospitality.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="GSA" />
+          <div class="course-card scroll-reveal reveal-right stagger-4">
+            <div class="img-reveal-wrapper">
+              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/Hospitality.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="GSA" />
+            </div>
             <div class="course-code">GSA — GUEST SERVICE ASSOCIATE</div>
             <h3 class="course-title">Create Experiences That Matter.</h3>
             <p class="course-tagline">Premium customer experience, luxury hospitality standards, international communication and service management.</p>
@@ -612,7 +642,7 @@ class DBSMApp {
         status: 'Hospitality Trainer',
         badge: 'GSA Lead',
         desc: 'Guest Service Associate master trainer specializing in luxury hospitality standards, customer relations, and international communications.',
-        img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600',
+        img: `${import.meta.env.BASE_URL || '/'}norbert_sunn.png`,
         contact: 'norbert@dbsm.dbtech.in'
       }
     ];
