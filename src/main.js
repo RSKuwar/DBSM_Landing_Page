@@ -189,7 +189,7 @@ class DBSMApp {
 
           <div class="course-card scroll-reveal reveal-right stagger-2">
             <div class="img-reveal-wrapper">
-              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/facilities.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="AWS" />
+              <img src="${import.meta.env.BASE_URL || '/'}aws_course.png" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="AWS" />
             </div>
             <div class="course-code">AWS RE/START — CLOUD COMPUTING</div>
             <h3 class="course-title">Build Your Career in the Cloud.</h3>
@@ -202,7 +202,7 @@ class DBSMApp {
 
           <div class="course-card scroll-reveal reveal-left stagger-3">
             <div class="img-reveal-wrapper">
-              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/home-refridgration.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="DCOM" />
+              <img src="${import.meta.env.BASE_URL || '/'}dcom_course.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="DCOM" />
             </div>
             <div class="course-code">DCOM — DATA CENTRE OPERATIONS</div>
             <h3 class="course-title">Power the Digital World.</h3>
@@ -481,7 +481,7 @@ class DBSMApp {
 
           <div class="course-card scroll-reveal reveal-right stagger-2">
             <div class="img-reveal-wrapper">
-              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/facilities.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="AWS" />
+              <img src="${import.meta.env.BASE_URL || '/'}aws_course.png" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="AWS" />
             </div>
             <div class="course-code">AWS RE/START — CLOUD COMPUTING</div>
             <h3 class="course-title">Build Your Career in the Cloud.</h3>
@@ -494,7 +494,7 @@ class DBSMApp {
 
           <div class="course-card scroll-reveal reveal-left stagger-3">
             <div class="img-reveal-wrapper">
-              <img src="https://dbsm.dbtech.in/images/centre-of-excellence/home-refridgration.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="DCOM" />
+              <img src="${import.meta.env.BASE_URL || '/'}dcom_course.jpg" style="width:100%; height:180px; object-fit:cover; margin-bottom:1.5rem;" alt="DCOM" />
             </div>
             <div class="course-code">DCOM — DATA CENTRE OPERATIONS</div>
             <h3 class="course-title">Power the Digital World.</h3>
