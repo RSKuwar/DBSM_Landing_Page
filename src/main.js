@@ -708,11 +708,14 @@ class DBSMApp {
      PRELOAD 120 WEBP FRAMES
   ------------------------------------------------------------- */
   preloadWebPFrames() {
-    this.frames = [];
+    this.frames = new Array(this.totalFrames);
     this.loadedFramesCount = 0;
 
     const baseUrl = import.meta.env.BASE_URL || '/';
-    for (let i = 1; i <= this.totalFrames; i++) {
+
+    // 1. Prioritize key milestone frames (1, 10, 20, ..., 120) for immediate scroll readiness
+    const loadFrame = (i) => {
+      if (this.frames[i - 1]) return; // Already loading/loaded
       const img = new Image();
       const numStr = String(i).padStart(3, '0');
       img.src = `${baseUrl}frames/dbsm-${numStr}.webp`;
@@ -722,12 +725,23 @@ class DBSMApp {
           this.renderCanvasFrame(0);
         }
       };
-      this.frames.push(img);
+      this.frames[i - 1] = img;
+    };
+
+    // Load key frames first
+    for (let i = 1; i <= this.totalFrames; i += 5) {
+      loadFrame(i);
+    }
+    loadFrame(this.totalFrames);
+
+    // 2. Load remaining frames sequentially
+    for (let i = 1; i <= this.totalFrames; i++) {
+      loadFrame(i);
     }
 
     setTimeout(() => {
       this.initCanvasScrollLoop();
-    }, 100);
+    }, 50);
   }
 
   renderCanvasFrame(index) {
@@ -744,7 +758,25 @@ class DBSMApp {
       canvas.height = windowHeight;
     }
 
-    const img = this.frames[index];
+    let img = this.frames[index];
+
+    // Fallback: If target frame is not fully loaded yet (e.g. initial visit on slow network),
+    // find nearest loaded frame so the screen never freezes or stutters
+    if (!img || !img.complete || img.naturalWidth === 0) {
+      for (let offset = 1; offset < this.totalFrames; offset++) {
+        const prev = this.frames[Math.max(0, index - offset)];
+        if (prev && prev.complete && prev.naturalWidth > 0) {
+          img = prev;
+          break;
+        }
+        const next = this.frames[Math.min(this.totalFrames - 1, index + offset)];
+        if (next && next.complete && next.naturalWidth > 0) {
+          img = next;
+          break;
+        }
+      }
+    }
+
     if (img && img.complete && img.naturalWidth > 0) {
       const imgRatio = img.naturalWidth / img.naturalHeight;
       const canvasRatio = windowWidth / windowHeight;
