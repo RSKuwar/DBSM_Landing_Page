@@ -817,10 +817,10 @@ class DBSMApp {
           // Progress ratio between 0 and 1
           const rawProgress = Math.min(Math.max(scrolled / (totalScrollable || 1), 0), 1);
 
-          // Calculate total horizontal translate distance needed
+          // Calculate total horizontal translate distance needed for all 7 cards
           const trackWidth = facultyTrack.scrollWidth;
           const viewportWidth = window.innerWidth;
-          const maxTranslate = Math.max(trackWidth - (viewportWidth * 0.85), 0);
+          const maxTranslate = Math.max(trackWidth - (viewportWidth * 0.45), 0);
 
           // Smooth horizontal translation
           const translateX = -rawProgress * maxTranslate;

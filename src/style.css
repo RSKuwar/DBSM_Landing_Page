@@ -422,7 +422,7 @@ header.navbar.scrolled {
 .faculty-scroll-container {
   position: relative;
   width: 100%;
-  height: 320vh; /* Scroll distance driver for desktop pin */
+  height: 380vh; /* Scroll distance driver for desktop pin */
   background-color: var(--bg-warm-secondary);
   z-index: 10;
 }
