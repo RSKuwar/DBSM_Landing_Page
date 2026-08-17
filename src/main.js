@@ -713,13 +713,22 @@ class DBSMApp {
 
     const baseUrl = import.meta.env.BASE_URL || '/';
 
+    // 1. Concurrent Batch Frame Preloader with High Priority & WebP Pre-decoding
     const loadFrame = (i) => {
-      if (this.frames[i - 1]) return; // Already loading/loaded
+      if (this.frames[i - 1]) return; // Already requested
       const img = new Image();
+      // Enable fetchPriority high for critical frames
+      if ('fetchPriority' in img && (i === 1 || i % 5 === 0)) {
+        img.fetchPriority = 'high';
+      }
       const numStr = String(i).padStart(3, '0');
       img.src = `${baseUrl}frames/dbsm-${numStr}.webp`;
       img.onload = () => {
         this.loadedFramesCount++;
+        // Pre-decode WebP image off main thread for instant GPU rendering
+        if (img.decode) {
+          img.decode().catch(() => {});
+        }
         if (i === 1 && this.currentView === 'home') {
           this.renderCanvasFrame(0);
         }
@@ -727,24 +736,37 @@ class DBSMApp {
       this.frames[i - 1] = img;
     };
 
-    // 1. Immediately request Frame 1 for zero-delay initial view
+    // Immediately trigger Frame 1 & Render
     loadFrame(1);
     this.renderCanvasFrame(0);
 
-    // 2. Prioritize key milestone frames (5, 10, 15, ..., 120) for instant scroll readiness
-    for (let i = 5; i <= this.totalFrames; i += 5) {
-      loadFrame(i);
-    }
-    loadFrame(this.totalFrames);
-
-    // 3. Load remaining frames sequentially
+    // Fire all 120 WebP frame requests concurrently in browser queue
     for (let i = 1; i <= this.totalFrames; i++) {
       loadFrame(i);
     }
 
+    // 2. Preload Faculty & Course Images concurrently for instant display
+    const facultyPhotos = [
+      'fr_eugene.png',
+      'bro_barnabas.png',
+      'fr_britto.png',
+      'yogarathnam.png',
+      'asha_naik.png',
+      'norbert_sunn.png',
+      'thomas_rosariyo.png',
+      'aws_course.png',
+      'dcom_course.jpg'
+    ];
+
+    facultyPhotos.forEach(photo => {
+      const img = new Image();
+      img.src = `${baseUrl}${photo}`;
+      if (img.decode) img.decode().catch(() => {});
+    });
+
     setTimeout(() => {
       this.initCanvasScrollLoop();
-    }, 20);
+    }, 10);
   }
 
   renderCanvasFrame(index) {
