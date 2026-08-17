@@ -713,7 +713,6 @@ class DBSMApp {
 
     const baseUrl = import.meta.env.BASE_URL || '/';
 
-    // 1. Prioritize key milestone frames (1, 10, 20, ..., 120) for immediate scroll readiness
     const loadFrame = (i) => {
       if (this.frames[i - 1]) return; // Already loading/loaded
       const img = new Image();
@@ -728,20 +727,24 @@ class DBSMApp {
       this.frames[i - 1] = img;
     };
 
-    // Load key frames first
-    for (let i = 1; i <= this.totalFrames; i += 5) {
+    // 1. Immediately request Frame 1 for zero-delay initial view
+    loadFrame(1);
+    this.renderCanvasFrame(0);
+
+    // 2. Prioritize key milestone frames (5, 10, 15, ..., 120) for instant scroll readiness
+    for (let i = 5; i <= this.totalFrames; i += 5) {
       loadFrame(i);
     }
     loadFrame(this.totalFrames);
 
-    // 2. Load remaining frames sequentially
+    // 3. Load remaining frames sequentially
     for (let i = 1; i <= this.totalFrames; i++) {
       loadFrame(i);
     }
 
     setTimeout(() => {
       this.initCanvasScrollLoop();
-    }, 50);
+    }, 20);
   }
 
   renderCanvasFrame(index) {

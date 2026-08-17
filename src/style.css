@@ -212,6 +212,9 @@ header.navbar.scrolled {
   height: 100%;
   display: block;
   object-fit: cover;
+  background-image: url('./frames/dbsm-001.webp');
+  background-size: cover;
+  background-position: center center;
 }
 
 .video-gradient-overlay {
