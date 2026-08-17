@@ -556,7 +556,7 @@ class DBSMApp {
         status: 'Resident Director',
         badge: 'Leadership',
         desc: 'Visionary institutional director guiding strategic expansion, academic excellence, and holistic youth empowerment at Don Bosco Skill Mission.',
-        img: '/fr_eugene.png',
+        img: `${import.meta.env.BASE_URL || '/'}fr_eugene.png`,
         contact: 'director@dbsm.dbtech.in'
       },
       {
@@ -566,7 +566,7 @@ class DBSMApp {
         status: 'Resident Leadership',
         badge: 'Center Head',
         desc: 'Overseeing daily operational excellence, campus administration, and technical domain integration across all centers of excellence.',
-        img: '/bro_barnabas.jpg',
+        img: `${import.meta.env.BASE_URL || '/'}bro_barnabas.jpg`,
         contact: 'barnabas@dbsm.dbtech.in'
       },
       {
@@ -576,7 +576,7 @@ class DBSMApp {
         status: 'Resident Leadership',
         badge: 'Center Head',
         desc: 'Spearheading student welfare, placement partnerships, industry alliances, and residential community development.',
-        img: '/fr_britto.png',
+        img: `${import.meta.env.BASE_URL || '/'}fr_britto.png`,
         contact: 'britto@dbsm.dbtech.in'
       },
       {
@@ -675,10 +675,11 @@ class DBSMApp {
     this.frames = [];
     this.loadedFramesCount = 0;
 
+    const baseUrl = import.meta.env.BASE_URL || '/';
     for (let i = 1; i <= this.totalFrames; i++) {
       const img = new Image();
       const numStr = String(i).padStart(3, '0');
-      img.src = `/frames/dbsm-${numStr}.webp`;
+      img.src = `${baseUrl}frames/dbsm-${numStr}.webp`;
       img.onload = () => {
         this.loadedFramesCount++;
         if (i === 1 && this.currentView === 'home') {
