@@ -644,6 +644,16 @@ class DBSMApp {
         desc: 'Guest Service Associate master trainer specializing in luxury hospitality standards, customer relations, and international communications.',
         img: `${import.meta.env.BASE_URL || '/'}norbert_sunn.png`,
         contact: 'norbert@dbsm.dbtech.in'
+      },
+      {
+        num: '07',
+        name: 'Thomas Rosariyo',
+        role: 'Accountant',
+        status: 'Financial Operations',
+        badge: 'Finance Lead',
+        desc: 'Managing campus financial management, accounting operations, budget auditing, and institutional payroll administration.',
+        img: `${import.meta.env.BASE_URL || '/'}thomas_rosariyo.png`,
+        contact: 'thomas@dbsm.dbtech.in'
       }
     ];
 
