@@ -486,14 +486,6 @@ header.navbar.scrolled {
   z-index: 5;
 }
 
-.faculty-card-horiz:hover {
-  transform: translateY(-8px) scale(1.06) !important;
-  opacity: 1 !important;
-  border-color: var(--accent-gold);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
-  z-index: 10;
-}
-
 .faculty-img-box-horiz {
   width: 100%;
   height: 360px;
@@ -703,15 +695,9 @@ header.navbar.scrolled {
   transform: scale(1);
 }
 
-/* Card Motion & Elevation */
+/* Card Motion & Elevation (Hover effects removed per user request) */
 .course-card, .campus-card {
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
-}
-
-.course-card:hover, .campus-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  border-color: var(--accent-gold);
+  transition: border-color 0.3s ease;
 }
 
 /* Statistics Grid & Counter Styling */
