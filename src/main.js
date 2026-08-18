@@ -841,17 +841,25 @@ class DBSMApp {
   }
 
   renderCanvasFrame(index) {
-    const canvas = document.getElementById('hero-frame-canvas');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!this.canvas) {
+      this.canvas = document.getElementById('hero-frame-canvas');
+      if (!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d', { alpha: false }); // Optimize context for opaque rendering
+    }
+    if (!this.ctx) return;
 
+    // Cache canvas width/height checks to eliminate layout reflows on scroll tick
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
     
-    if (canvas.width !== windowWidth || canvas.height !== windowHeight) {
-      canvas.width = windowWidth;
-      canvas.height = windowHeight;
+    // Scale canvas buffer appropriately (cap DPR at 1.5 for performance/memory balance)
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const targetWidth = Math.floor(windowWidth * dpr);
+    const targetHeight = Math.floor(windowHeight * dpr);
+
+    if (this.canvas.width !== targetWidth || this.canvas.height !== targetHeight) {
+      this.canvas.width = targetWidth;
+      this.canvas.height = targetHeight;
     }
 
     let img = this.frames[index];
@@ -875,24 +883,23 @@ class DBSMApp {
 
     if (img && img.complete && img.naturalWidth > 0) {
       const imgRatio = img.naturalWidth / img.naturalHeight;
-      const canvasRatio = windowWidth / windowHeight;
+      const canvasRatio = targetWidth / targetHeight;
 
       let drawWidth, drawHeight, offsetX, offsetY;
 
       if (canvasRatio > imgRatio) {
-        drawWidth = windowWidth;
-        drawHeight = windowWidth / imgRatio;
+        drawWidth = targetWidth;
+        drawHeight = targetWidth / imgRatio;
         offsetX = 0;
-        offsetY = (windowHeight - drawHeight) / 2;
+        offsetY = (targetHeight - drawHeight) / 2;
       } else {
-        drawHeight = windowHeight;
-        drawWidth = windowHeight * imgRatio;
-        offsetX = (windowWidth - drawWidth) / 2;
+        drawHeight = targetHeight;
+        drawWidth = targetHeight * imgRatio;
+        offsetX = (targetWidth - drawWidth) / 2;
         offsetY = 0;
       }
 
-      ctx.clearRect(0, 0, windowWidth, windowHeight);
-      ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      this.ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
     }
   }
 
