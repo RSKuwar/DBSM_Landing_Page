@@ -11,7 +11,7 @@ class DBSMApp {
     this.targetFrameIndex = 0;
 
     this.initHTML();
-    this.preloadWebPFrames();
+    this.initFrameEngine();
     this.setupNavigation();
   }
 
@@ -705,68 +705,139 @@ class DBSMApp {
   }
 
   /* -------------------------------------------------------------
-     PRELOAD 120 WEBP FRAMES
+     INTELLIGENT PROGRESSIVE & SCROLL-AWARE FRAME ENGINE
   ------------------------------------------------------------- */
-  preloadWebPFrames() {
+  initFrameEngine() {
     this.frames = new Array(this.totalFrames);
-    this.loadedFramesCount = 0;
+    this.frameStatus = new Array(this.totalFrames).fill(0); // 0 = unrequested, 1 = loading, 2 = loaded
+    this.baseUrl = import.meta.env.BASE_URL || '/';
+    this.lastScrollY = window.scrollY;
+    this.scrollDirection = 'down'; // 'down' or 'up'
+    this.maxMemoryCacheWindow = 35; // Keep max 35 decoded frames in rolling memory window to conserve RAM
 
-    const baseUrl = import.meta.env.BASE_URL || '/';
-
-    // 1. Concurrent Batch Frame Preloader with High Priority & WebP Pre-decoding
-    const loadFrame = (i) => {
-      if (this.frames[i - 1]) return; // Already requested
-      const img = new Image();
-      // Enable fetchPriority high for critical frames
-      if ('fetchPriority' in img && (i === 1 || i % 5 === 0)) {
-        img.fetchPriority = 'high';
-      }
-      const numStr = String(i).padStart(3, '0');
-      img.src = `${baseUrl}frames/dbsm-${numStr}.webp`;
-      img.onload = () => {
-        this.loadedFramesCount++;
-        // Pre-decode WebP image off main thread for instant GPU rendering
-        if (img.decode) {
-          img.decode().catch(() => {});
-        }
-        if (i === 1 && this.currentView === 'home') {
-          this.renderCanvasFrame(0);
-        }
-      };
-      this.frames[i - 1] = img;
-    };
-
-    // Immediately trigger Frame 1 & Render
-    loadFrame(1);
+    // 1. Immediately request Frame 1 for zero-delay first paint
+    this.loadFrame(1, 'high');
     this.renderCanvasFrame(0);
 
-    // Fire all 120 WebP frame requests concurrently in browser queue
-    for (let i = 1; i <= this.totalFrames; i++) {
-      loadFrame(i);
+    // 2. Load immediate initial batch (frames 2 to 10) for instant initial scroll readiness
+    for (let i = 2; i <= 10; i++) {
+      this.loadFrame(i, 'high');
     }
 
-    // 2. Preload Faculty & Course Images concurrently for instant display
-    const facultyPhotos = [
-      'fr_eugene.png',
-      'bro_barnabas.png',
-      'fr_britto.png',
-      'yogarathnam.png',
-      'asha_naik.png',
-      'norbert_sunn.png',
-      'thomas_rosariyo.png',
-      'aws_course.png',
-      'dcom_course.jpg'
-    ];
+    // Start scroll listening and frame preloader schedule
+    this.updateScrollDirection();
+    this.initCanvasScrollLoop();
+    this.initLazyImageObserver();
+  }
 
-    facultyPhotos.forEach(photo => {
-      const img = new Image();
-      img.src = `${baseUrl}${photo}`;
-      if (img.decode) img.decode().catch(() => {});
+  loadFrame(i, priority = 'auto') {
+    if (i < 1 || i > this.totalFrames) return;
+    const index = i - 1;
+    if (this.frameStatus[index] !== 0) return; // Already requested or loaded
+
+    this.frameStatus[index] = 1; // Mark loading
+    const img = new Image();
+    if ('fetchPriority' in img) {
+      img.fetchPriority = priority;
+    }
+    const numStr = String(i).padStart(3, '0');
+    img.src = `${this.baseUrl}frames/dbsm-${numStr}.webp`;
+
+    img.onload = () => {
+      this.frameStatus[index] = 2; // Mark loaded
+      if (img.decode) {
+        img.decode().catch(() => {});
+      }
+      if (i === 1 && this.currentView === 'home') {
+        this.renderCanvasFrame(0);
+      }
+    };
+
+    img.onerror = () => {
+      this.frameStatus[index] = 0; // Reset status for retry if needed
+    };
+
+    this.frames[index] = img;
+  }
+
+  updateScrollDirection() {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > this.lastScrollY + 2) {
+      this.scrollDirection = 'down';
+    } else if (currentScrollY < this.lastScrollY - 2) {
+      this.scrollDirection = 'up';
+    }
+    this.lastScrollY = currentScrollY;
+  }
+
+  scheduleDirectionalPreload(currentFrameIndex) {
+    const currentFrame = Math.round(currentFrameIndex) + 1; // 1-indexed
+
+    // Determine target range based on scroll direction
+    const aheadCount = 18;
+    const behindCount = 6;
+
+    if (this.scrollDirection === 'down') {
+      // Prioritize upcoming frames forward
+      for (let i = currentFrame; i <= Math.min(this.totalFrames, currentFrame + aheadCount); i++) {
+        this.loadFrame(i, i <= currentFrame + 5 ? 'high' : 'auto');
+      }
+      // Lightly load behind frames
+      for (let i = currentFrame - 1; i >= Math.max(1, currentFrame - behindCount); i--) {
+        this.loadFrame(i, 'low');
+      }
+    } else {
+      // User is scrolling UP: Prioritize previous frames backward
+      for (let i = currentFrame; i >= Math.max(1, currentFrame - aheadCount); i--) {
+        this.loadFrame(i, i >= currentFrame - 5 ? 'high' : 'auto');
+      }
+      // Lightly load forward frames
+      for (let i = currentFrame + 1; i <= Math.min(this.totalFrames, currentFrame + behindCount); i++) {
+        this.loadFrame(i, 'low');
+      }
+    }
+
+    // ROLLING MEMORY CACHE MANAGEMENT
+    // Unload distant frames from memory outside currentWindow to prevent high memory usage
+    const minKeep = Math.max(1, currentFrame - this.maxMemoryCacheWindow);
+    const maxKeep = Math.min(this.totalFrames, currentFrame + this.maxMemoryCacheWindow);
+
+    for (let i = 0; i < this.totalFrames; i++) {
+      const frameNum = i + 1;
+      if (frameNum < minKeep || frameNum > maxKeep) {
+        if (this.frames[i] && this.frameStatus[i] === 2) {
+          // Garbage collect distant frame src
+          this.frames[i].src = '';
+          this.frames[i] = null;
+          this.frameStatus[i] = 0; // Mark unrequested so it can re-fetch if user scrolls back
+        }
+      }
+    }
+  }
+
+  /* -------------------------------------------------------------
+     LAZY-LOAD BELOW-THE-FOLD IMAGES OBSERVER
+  ------------------------------------------------------------- */
+  initLazyImageObserver() {
+    if (!('IntersectionObserver' in window)) return;
+
+    const lazyImageObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            if (img.decode) img.decode().catch(() => {});
+            delete img.dataset.src;
+          }
+          observer.unobserve(img);
+        }
+      });
+    }, { rootMargin: '300px 0px' }); // Preload 300px before entering viewport
+
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      lazyImageObserver.observe(img);
     });
-
-    setTimeout(() => {
-      this.initCanvasScrollLoop();
-    }, 10);
   }
 
   renderCanvasFrame(index) {
@@ -831,6 +902,7 @@ class DBSMApp {
     const updateFrameLoop = () => {
       // 1. Home View Video Canvas Scroll Scrubbing
       if (this.currentView === 'home') {
+        this.updateScrollDirection();
         const heroContainer = document.getElementById('hero-scroll-container');
         if (heroContainer) {
           const rect = heroContainer.getBoundingClientRect();
@@ -844,8 +916,11 @@ class DBSMApp {
             this.totalFrames - 1
           );
 
-          this.currentFrameIndex += (this.targetFrameIndex - this.currentFrameIndex) * 0.2;
+          this.currentFrameIndex += (this.targetFrameIndex - this.currentFrameIndex) * 0.25;
           const renderIndex = Math.round(this.currentFrameIndex);
+
+          // Schedule directional preloading for upcoming or previous frames
+          this.scheduleDirectionalPreload(renderIndex);
 
           this.renderCanvasFrame(renderIndex);
 
