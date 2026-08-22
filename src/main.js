@@ -1156,6 +1156,12 @@ class DBSMApp {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
+    // Reset cached canvas and context element reference so newly injected DOM elements are bound
+    this.canvas = null;
+    this.ctx = null;
+    this.currentFrameIndex = 0;
+    this.targetFrameIndex = 0;
+
     document.querySelectorAll('.nav-link').forEach(l => {
       l.classList.toggle('active', l.getAttribute('data-view') === viewName);
     });
@@ -1163,7 +1169,11 @@ class DBSMApp {
     switch (viewName) {
       case 'home':
         mainContent.innerHTML = this.renderHomeView();
-        setTimeout(() => this.renderCanvasFrame(0), 50);
+        // Load frame 1 if not loaded and draw immediately onto canvas
+        this.loadFrame(1, 'high');
+        requestAnimationFrame(() => {
+          this.renderCanvasFrame(0);
+        });
         break;
       case 'about':
         mainContent.innerHTML = this.renderAboutView();
@@ -1194,7 +1204,10 @@ class DBSMApp {
         break;
       default:
         mainContent.innerHTML = this.renderHomeView();
-        setTimeout(() => this.renderCanvasFrame(0), 50);
+        this.loadFrame(1, 'high');
+        requestAnimationFrame(() => {
+          this.renderCanvasFrame(0);
+        });
     }
   }
 }
